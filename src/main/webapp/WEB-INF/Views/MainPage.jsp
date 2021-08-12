@@ -1,10 +1,4 @@
-<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %><%--
-  Created by IntelliJ IDEA.
-  User: James
-  Date: 2021/7/28
-  Time: 22:37
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 
 
