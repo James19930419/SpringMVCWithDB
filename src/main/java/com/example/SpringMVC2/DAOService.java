@@ -18,85 +18,90 @@ public class DAOService implements DAOInterface {
 
 
     @Override
-    public void add(CategoryClass catToBeAdd) throws SQLException, ClassNotFoundException {
-        String queryStr = "INSERT INTO category VALUES ( ?, ? )";
+    public void add(CustomerClass custToBeAdd) throws SQLException, ClassNotFoundException {
+        String queryStr = "INSERT INTO savingstable VALUES ( ?, ? ,? ,?,? )";
         PreparedStatement query = DBconnection.prepareStatement(queryStr,ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
-        query.setString(1, catToBeAdd.getCatcode());//1,2为Data Binding的'?'顺序
-        query.setString(2, catToBeAdd.getCatdesc());
+        query.setString(1, custToBeAdd.getCustno());//1,2为Data Binding的'?'顺序
+        query.setString(2, custToBeAdd.getCustname());
+        query.setDouble(3, custToBeAdd.getCdep());
+        query.setInt(4, custToBeAdd.getNyears());
+        query.setString(5, custToBeAdd.getSavtype());
         query.executeUpdate();
     }
 
     @Override
-    public CategoryClass edit(@org.jetbrains.annotations.NotNull CategoryClass catToBeUpdated, String catcode) throws SQLException, ClassNotFoundException {
+    public CustomerClass edit(@org.jetbrains.annotations.NotNull CustomerClass catToBeUpdated, String custno) throws SQLException, ClassNotFoundException {
         PreparedStatement query;
-        query = DBconnection.prepareStatement("Update category set catcode=?, catdesc=? where catcode = ?",ResultSet.TYPE_SCROLL_SENSITIVE,
+        query = DBconnection.prepareStatement("Update savingstable set custno=?, custname=?, cdep =?,nyears=?,savtype=? where custno = ?",ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
-        query.setString(1, catToBeUpdated.getCatcode());
-        query.setString(2, catToBeUpdated.getCatdesc());
-        query.setString(3, catcode);
+        query.setString(1, catToBeUpdated.getCustno());
+        query.setString(2, catToBeUpdated.getCustname());
+        query.setDouble(3, catToBeUpdated.getCdep());
+        query.setInt(4, catToBeUpdated.getNyears());
+        query.setString(5, catToBeUpdated.getSavtype());
+        query.setString(6, custno);
         query.executeUpdate();
         return catToBeUpdated;
     }
 
     @Override
-    public void delete(String catcode) throws SQLException {
-        String quer1 = "Delete from Category where catcode = ?";
+    public void delete(String custno) throws SQLException {
+        String quer1 = "Delete from savingstable where custno = ?";
         PreparedStatement query = DBconnection.prepareStatement(quer1,ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
-        query.setString(1, catcode);
+        query.setString(1, custno);
         query.executeUpdate();
 
     }
 
     @Override
-    public List<CategoryClass> selectAllCategoryTable() throws ClassNotFoundException, SQLException {
+    public List<CustomerClass> selectAllCustomersTable() throws ClassNotFoundException, SQLException {
         //create an array list that will contain the data recovered
-        List<CategoryClass> Catlist = new ArrayList<CategoryClass>();
-        String quer1 = "Select * from category";
+        List<CustomerClass> Catlist = new ArrayList<CustomerClass>();
+        String quer1 = "Select * from savingstable";
         PreparedStatement query = DBconnection.prepareStatement(quer1);
         ResultSet resultSet = query.executeQuery();
-        CategoryClass oneCategory;
+        CustomerClass oneCategory;
         //display records if there is data;
         while (resultSet.next()) {
-            oneCategory = new CategoryClass(resultSet.getString("catcode"), resultSet.getString("catdesc"));
+            oneCategory = new CustomerClass(
+                    resultSet.getString("custno"),
+                    resultSet.getString("custname"),
+                    resultSet.getDouble("cdep"),
+                    resultSet.getInt("nyears"),
+                    resultSet.getString("savtype")
+            );
             Catlist.add(oneCategory);
         }
         return Catlist;
     }
 
-    public CategoryClass selectOneCategoryByKey(String catcode) throws SQLException,ClassNotFoundException {
-        String quer1 = "Select * from category where catcode = ?";
+    public CustomerClass selectOneCategoryByKey(String custno) throws SQLException,ClassNotFoundException {
+        String quer1 = "Select * from savingstable where custno = ?";
         PreparedStatement query = DBconnection.prepareStatement(quer1,ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
-        query.setString(1, catcode);
+        query.setString(1, custno);
         ResultSet resultSet = query.executeQuery();
         if(!resultSet.first()){
             System.out.print("Record not existing");//this will be in url
             return null;
         }
-        CategoryClass oneCategory=null;
-        oneCategory = new CategoryClass(resultSet.getString("catcode"), resultSet.getString("catdesc"));
+        CustomerClass oneCategory=null;
+        oneCategory = new CustomerClass(
+                resultSet.getString("custno"),
+                resultSet.getString("custname"),
+                resultSet.getDouble("cdep"),
+                resultSet.getInt("nyears"),
+                resultSet.getString("savtype")
+        );
         return oneCategory;
     }
 
-    public ArrayList<ItemsClass> selectAllItemsTableUnderSameCatcode(String catcode) throws ClassNotFoundException, SQLException {
-        ArrayList<ItemsClass> allItemsInThatCatcode = new ArrayList<ItemsClass>();
-        String quer1 = "Select itemcode,itemdesc from items where catcode=?";
-        PreparedStatement query = DBconnection.prepareStatement(quer1,ResultSet.TYPE_SCROLL_SENSITIVE,
-                ResultSet.CONCUR_UPDATABLE);
-        query.setString(1, catcode);
-        ResultSet resultSet = query.executeQuery();
-        while (resultSet.next()){
-            ItemsClass oneItem = new ItemsClass(resultSet.getString("itemcode"), resultSet.getString("itemdesc"),catcode);
-            allItemsInThatCatcode.add(oneItem);
-        }
-        if(allItemsInThatCatcode.size()<1){
-            System.out.print("Record not existing");
-            return null;
-        }
-        else {
-            return allItemsInThatCatcode;
-        }
-    }
+//    public ArrayList<InterestClass> selectAllItemsTableUnderSameCustno(String custno) throws ClassNotFoundException, SQLException {
+//        ArrayList<InterestClass> allItemsInThatcustno = new ArrayList<InterestClass>();
+//
+//
+//        return allItemsInThatcustno;
+//    }
 }

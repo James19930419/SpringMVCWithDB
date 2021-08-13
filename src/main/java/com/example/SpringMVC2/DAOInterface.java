@@ -6,9 +6,9 @@ import java.util.List;
 //Create a Database Interface.
 public interface DAOInterface {
 
-    public void add(CategoryClass cat)throws SQLException,ClassNotFoundException;
-    public CategoryClass edit(CategoryClass cat, String catcode) throws SQLException,ClassNotFoundException;
-    public void delete(String catcode) throws SQLException;
-    public List<CategoryClass> selectAllCategoryTable()throws ClassNotFoundException, SQLException;
+    public void add(CustomerClass cust)throws SQLException,ClassNotFoundException;
+    public CustomerClass edit(CustomerClass cust, String custno) throws SQLException,ClassNotFoundException;
+    public void delete(String custno) throws SQLException;
+    public List<CustomerClass> selectAllCustomersTable()throws ClassNotFoundException, SQLException;
 
 }

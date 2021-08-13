@@ -1,4 +1,4 @@
-import com.example.SpringMVC2.CategoryClass;
+import com.example.SpringMVC2.CustomerClass;
 import com.example.SpringMVC2.DAOService;
 import com.example.SpringMVC2.PDOService;
 import org.junit.jupiter.api.Assertions;
@@ -36,14 +36,14 @@ class DAO_UnitTest {
     @Mock
     private PDOService connection1;
 
-    CategoryClass category;
+    CustomerClass category;
 
     @BeforeEach
     public void Setup() throws SQLException, ClassNotFoundException {
         MockitoAnnotations.openMocks(this);
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         when(connection1.connect()).thenReturn(connection);
-        category=new CategoryClass("101","food");
+        category=new CustomerClass("101","food");
     }
 
     @Test
@@ -66,8 +66,8 @@ class DAO_UnitTest {
         when(resultSet.getString("catcode")).thenReturn("101");
         when(resultSet.getString("catdesc")).thenReturn("food");
         when(resultSet.first()).thenReturn(true);
-        CategoryClass categ=daoService.selectOneCategoryByKey("101");
-        assertEquals("101",categ.getCatcode());
+        CustomerClass categ=daoService.selectOneCategoryByKey("101");
+        assertEquals("101",categ.getCustno());
 
     }
     @Test
@@ -81,7 +81,7 @@ class DAO_UnitTest {
         when(resultSet.getString("catdesc")).thenReturn("norecord");
 
 
-        CategoryClass categ=daoService.selectOneCategoryByKey("norecord");
+        CustomerClass categ=daoService.selectOneCategoryByKey("norecord");
         Assertions.assertNull(categ);
 
     }
@@ -95,11 +95,11 @@ class DAO_UnitTest {
 //        when(preparedStatement.executeQuery()).thenReturn(resultSet);
 //
 //        CategoryClass categ=daoService.search("101");
-        category=new CategoryClass("101","Food&Bev");
+        category=new CustomerClass("101","Food&Bev");
         when(connection.prepareStatement("Update category set catcode=?, catdesc=? where catcode = ?",ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE)).thenReturn(preparedStatement);
-        CategoryClass cat1=daoService.edit(category,"101");
-        assertEquals("Food&Bev",cat1.getCatdesc());
+        CustomerClass cat1=daoService.edit(category,"101");
+        assertEquals("Food&Bev",cat1.getCustname());
     }
 
     @Test
@@ -120,7 +120,7 @@ class DAO_UnitTest {
         when(resultSet.first()).thenReturn(true);
 
         doReturn(resultSet).when(preparedStatement).executeQuery();
-        daoService.selectAllCategoryTable();
+        daoService.selectAllCustomersTable();
         verify(preparedStatement).executeQuery();
 
     }
